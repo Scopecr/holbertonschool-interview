@@ -1,25 +1,28 @@
 #!/usr/bin/python3
-"""method that determines if all boxes can be opened"""
+"""method that determines if all
+boxes can be opened"""
 
-def canUnlcokAll(boxes):
-    """ n = number of locked boxes
-        boxes = list of lists
-        Return = True if all boxes can be opened
-        False if not all boxes can be opened
-    """
+
+def canUnlockAll(boxes):
+    """n = number of locked boxes
+    boxes = list of lists
+    Return = True if all boxes can be opened
+    False if not all boxes can be opened"""
+    # box is empty, return false
     if len(boxes) == 0:
         return False
-    #if box empity return false
+    # box 0 is unlocked
     keys = [0]
-    #boxes that return 0 are unlocked
-    for keys in keys:
-        #loop through keys
-        for key in keys:
-            for new_key in boxes[key]:
-                #loop through boxes and if new_keys is or not in key new_keys is less than the number of boxes
-                if new_key not in keys and new_key < len(boxes):
-                    keys.append(new_key)
-                    #Adds new_key to keys and if number is equal to the number of boxes
+    # loop through keys
+    for key in keys:
+        # loop through boxes
+        for new_key in boxes[key]:
+            # if new_key is not in keys and new_key is less
+            # than the number of boxes
+            if new_key not in keys and new_key < len(boxes):
+                # add new_key to keys
+                keys.append(new_key)
+    # if the number of keys is equal to the number of boxes
     if len(keys) == len(boxes):
         return True
     return False
