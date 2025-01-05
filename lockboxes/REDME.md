@@ -13,4 +13,3 @@ The function follows these rules:
 - All keys are positive integers.
 - There can be keys that do not have corresponding boxes.
 - The first box (boxes[0]) is initially unlocked.
-"""
