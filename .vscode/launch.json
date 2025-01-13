@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/waltercarrion/holbertonschool-interview-1/insert_in_sorted_linked_list",
+      "program": "/Users/waltercarrion/holbertonschool-interview-1/insert_in_sorted_linked_list/build/Debug/outDebug"
+    }
+  ]
+}
