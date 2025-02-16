@@ -22,6 +22,22 @@ def print_stats(total_size, status_codes):
             print(f"{code}: {status_codes[code]}")
 
 
+def extract_metrics(line):
+    """Extract metrics from a line.
+    
+    Args:
+        line (str): Input line to process
+        
+    Returns:
+        tuple: (status_code, file_size) or (None, None) if invalid
+    """
+    try:
+        *_, status_code, file_size = line.split()
+        return int(status_code), int(file_size)
+    except (ValueError, IndexError):
+        return None, None
+
+
 def main():
     """Main function to process the log file and compute metrics."""
     total_size = 0
@@ -33,22 +49,16 @@ def main():
     
     try:
         for line in sys.stdin:
-            try:
-                parts = line.split()
-                if len(parts) >= 7:  # Check if we have enough parts
-                    status_code = int(parts[-2])
-                    file_size = int(parts[-1])
-                    
-                    # Update metrics
-                    if status_code in status_codes:
-                        status_codes[status_code] += 1
-                    total_size += file_size
-                    
-                    line_count += 1
-                    if line_count % 10 == 0:
-                        print_stats(total_size, status_codes)
-            except (ValueError, IndexError):
-                pass
+            status_code, file_size = extract_metrics(line)
+            
+            if status_code is not None and file_size is not None:
+                if status_code in status_codes:
+                    status_codes[status_code] += 1
+                total_size += file_size
+                
+                line_count += 1
+                if line_count % 10 == 0:
+                    print_stats(total_size, status_codes)
     except KeyboardInterrupt:
         pass
     finally:
