@@ -8,6 +8,7 @@ After every 10 lines and/or keyboard interruption, prints statistics including:
 """
 import sys
 
+
 def print_stats(total_size, status_codes):
     """Print the statistics of the parsed log file.
     
@@ -20,6 +21,7 @@ def print_stats(total_size, status_codes):
         if status_codes[code] > 0:
             print(f"{code}: {status_codes[code]}")
 
+
 def main():
     """Main function to process the log file and compute metrics."""
     total_size = 0
@@ -31,30 +33,30 @@ def main():
     
     try:
         for line in sys.stdin:
-            line = line.strip()
             try:
-                # Split the line and extract the relevant parts
-                parts = line.split()
-                if len(parts) >= 9:  # Ensure we have all required parts
-                    status_code = int(parts[-2])  # Second to last element
-                    file_size = int(parts[-1])    # Last element
-                    
-                    # Update metrics
-                    if status_code in status_codes:
-                        status_codes[status_code] += 1
-                    total_size += file_size
-                    
+                line = line.strip()
+                if line:  # Skip empty lines
+                    # Split the line and extract the relevant parts
+                    parts = line.split()
+                    if len(parts) >= 9:  # Ensure we have all required parts
+                        status_code = int(parts[-2])  # Second to last element
+                        file_size = int(parts[-1])    # Last element
+                        
+                        # Update metrics
+                        if status_code in status_codes:
+                            status_codes[status_code] += 1
+                        total_size += file_size
+                        
                     line_count += 1
                     if line_count % 10 == 0:
                         print_stats(total_size, status_codes)
             except (ValueError, IndexError):
                 continue
-        # Print stats for any remaining lines
-        if line_count % 10 != 0:
-            print_stats(total_size, status_codes)
-                
     except KeyboardInterrupt:
+        pass
+    finally:
         print_stats(total_size, status_codes)
+
 
 if __name__ == "__main__":
     main()
