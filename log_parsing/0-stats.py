@@ -35,7 +35,7 @@ def main():
             try:
                 # Split the line and extract the relevant parts
                 parts = line.split()
-                if len(parts) > 2:  # Basic validation that we have enough parts
+                if len(parts) >= 9:  # Ensure we have all required parts
                     status_code = int(parts[-2])  # Second to last element
                     file_size = int(parts[-1])    # Last element
                     
@@ -47,13 +47,14 @@ def main():
                     line_count += 1
                     if line_count % 10 == 0:
                         print_stats(total_size, status_codes)
-                        
             except (ValueError, IndexError):
                 continue
+        # Print stats for any remaining lines
+        if line_count % 10 != 0:
+            print_stats(total_size, status_codes)
                 
     except KeyboardInterrupt:
         print_stats(total_size, status_codes)
-        sys.exit()
 
 if __name__ == "__main__":
     main()
