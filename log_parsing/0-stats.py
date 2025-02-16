@@ -34,24 +34,21 @@ def main():
     try:
         for line in sys.stdin:
             try:
-                line = line.strip()
-                if line:  # Skip empty lines
-                    # Split the line and extract the relevant parts
-                    parts = line.split()
-                    if len(parts) >= 9:  # Ensure we have all required parts
-                        status_code = int(parts[-2])  # Second to last element
-                        file_size = int(parts[-1])    # Last element
-                        
-                        # Update metrics
-                        if status_code in status_codes:
-                            status_codes[status_code] += 1
-                        total_size += file_size
-                        
+                parts = line.split()
+                if len(parts) >= 7:  # Check if we have enough parts
+                    status_code = int(parts[-2])
+                    file_size = int(parts[-1])
+                    
+                    # Update metrics
+                    if status_code in status_codes:
+                        status_codes[status_code] += 1
+                    total_size += file_size
+                    
                     line_count += 1
                     if line_count % 10 == 0:
                         print_stats(total_size, status_codes)
             except (ValueError, IndexError):
-                continue
+                pass
     except KeyboardInterrupt:
         pass
     finally:
