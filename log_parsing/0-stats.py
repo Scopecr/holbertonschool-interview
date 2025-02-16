@@ -1,42 +1,48 @@
 #!/usr/bin/python3
 import sys
 import re
-from collections import defaultdict
 
-# Define the regular expression to match the input format
-log_pattern = r'(\d+\.\d+\.\d+\.\d+) - \[([^\]]+)\] "GET /projects/\d+ HTTP/1.1" (\d{3}) (\d+)'
+def print_stats(total_size, status_codes):
+    """Print the statistics."""
+    print(f"File size: {total_size}")
+    for code in sorted(status_codes.keys()):
+        if status_codes[code] > 0:
+            print(f"{code}: {status_codes[code]}")
 
-# Initialize the variables
-total_size = 0
-status_code_count = defaultdict(int)
-line_count = 0
+def main():
+    total_size = 0
+    line_count = 0
+    status_codes = {
+        200: 0, 301: 0, 400: 0, 401: 0,
+        403: 0, 404: 0, 405: 0, 500: 0
+    }
+    
+    # Regular expression pattern for line validation
+    pattern = r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3} - \[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d+\] "GET /projects/260 HTTP/1\.1" (\d{3}) (\d+)$'
+    
+    try:
+        for line in sys.stdin:
+            try:
+                match = re.match(pattern, line.strip())
+                if match:
+                    status_code = int(match.group(1))
+                    file_size = int(match.group(2))
+                    
+                    # Update metrics
+                    if status_code in status_codes:
+                        status_codes[status_code] += 1
+                    total_size += file_size
+                    
+                    line_count += 1
+                    if line_count % 10 == 0:
+                        print_stats(total_size, status_codes)
+                        
+            except ValueError:
+                continue
+                
+    except KeyboardInterrupt:
+        print_stats(total_size, status_codes)
+        raise
 
-try:
-    # Read the stdin line by line
-    for line in sys.stdin:
-        line = line.strip()
-        match = re.match(log_pattern, line)
-        
-        # If line matches the expected format, process it
-        if match:
-            ip_address, date, status_code, file_size = match.groups()
-            
-            # Increment total size and status code count
-            total_size += int(file_size)
-            if status_code in {'200', '301', '400', '401', '403', '404', '405', '500'}:
-                status_code_count[status_code] += 1
-
-            line_count += 1
-
-        # After every 10 lines or keyboard interruption, print statistics
-        if line_count % 10 == 0:
-            print(f"Total file size: {total_size}")
-            for status_code in sorted(status_code_count.keys()):
-                print(f"{status_code}: {status_code_count[status_code]}")
-
-except KeyboardInterrupt:
-    # Handle keyboard interruption gracefully
-    print("\nKeyboard Interrupt. Final statistics:")
-    print(f"Total file size: {total_size}")
-    for status_code in sorted(status_code_count.keys()):
-        print(f"{status_code}: {status_code_count[status_code]}")
+if __name__ == "__main__":
+    main()
