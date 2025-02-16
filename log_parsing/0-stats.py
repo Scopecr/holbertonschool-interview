@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 import sys
-import re
 
 def print_stats(total_size, status_codes):
     """Print the statistics."""
@@ -17,16 +16,15 @@ def main():
         403: 0, 404: 0, 405: 0, 500: 0
     }
     
-    # Regular expression pattern for line validation
-    pattern = r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3} - \[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d+\] "GET /projects/260 HTTP/1\.1" (\d{3}) (\d+)$'
-    
     try:
         for line in sys.stdin:
+            line = line.strip()
             try:
-                match = re.match(pattern, line.strip())
-                if match:
-                    status_code = int(match.group(1))
-                    file_size = int(match.group(2))
+                # Split the line and extract the relevant parts
+                parts = line.split()
+                if len(parts) > 2:  # Basic validation that we have enough parts
+                    status_code = int(parts[-2])  # Second to last element
+                    file_size = int(parts[-1])    # Last element
                     
                     # Update metrics
                     if status_code in status_codes:
@@ -37,12 +35,12 @@ def main():
                     if line_count % 10 == 0:
                         print_stats(total_size, status_codes)
                         
-            except ValueError:
+            except (ValueError, IndexError):
                 continue
                 
     except KeyboardInterrupt:
         print_stats(total_size, status_codes)
-        raise
+        sys.exit()
 
 if __name__ == "__main__":
     main()
