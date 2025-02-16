@@ -37,7 +37,6 @@ def main():
     
     try:
         for line in sys.stdin:
-            print(f"Processing line: {line.strip()}")
             match = re.match(pattern, line.strip())
             if match:
                 status_code = int(match.group(1))
@@ -50,8 +49,6 @@ def main():
                 line_count += 1
                 if line_count % 10 == 0:
                     print_stats(total_size, status_codes)
-            else:
-                print(f"Line did not match pattern: {line.strip()}")
     except KeyboardInterrupt:
         pass
     finally:
