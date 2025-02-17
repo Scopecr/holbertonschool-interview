@@ -5,7 +5,7 @@ Reads stdin line by line and computes metrics
 
 from sys import stdin
 
-if name == "main":
+def main():
     total_size = 0
     status_codes = {}
     list_status_codes = [
@@ -18,11 +18,11 @@ if name == "main":
             try:
                 args = line.split(" ")
                 if len(args) != 9:
-                    pass
+                    continue
                 if args[-2] in list_status_codes:
                     status_codes[args[-2]] += 1
                 if args[-1][-1] == '\n':
-                    args[-1][:-1]
+                    args[-1] = args[-1][:-1]
                 total_size += int(args[-1])
             except (IndexError, ValueError):
                 pass
@@ -44,5 +44,5 @@ if name == "main":
                 print("{}: {}".format(status, status_codes[status]))
         raise
 
-if name == "main":
+if __name__ == "__main__":
     main()
