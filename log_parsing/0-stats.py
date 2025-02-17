@@ -1,78 +1,48 @@
 #!/usr/bin/python3
 """
-Script that reads stdin line by line and computes metrics:
-- Input format: '<IP Address> - [<date>] "GET /projects/260 HTTP/1.1" <status code> <file size>'
-- After every 10 lines and/or a keyboard interruption (CTRL + C), print statistics
-- Total file size: File size: <total size>
-- Number of lines by status code in ascending order
+Reads stdin line by line and computes metrics
 """
-import sys
-import signal
-import re
-from collections import defaultdict
 
-def print_statistics(total_size, status_codes):
-    """Print the required statistics."""
-    print(f"File size: {total_size}")
-    for code in sorted(status_codes.keys()):
-        # Only print status codes that are integers and in our valid set
-        try:
-            code_int = int(code)
-            if code_int in {200, 301, 400, 401, 403, 404, 405, 500}:
-                print(f"{code}: {status_codes[code]}")
-        except ValueError:
-            continue
+from sys import stdin
 
-def parse_line(line):
-    """
-    Parse a log line and return file size and status code.
-    Returns None if the line format is invalid.
-    """
-    pattern = r'^\S+ - \[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{6}\] "GET /projects/260 HTTP/1\.1" (\d+) (\d+)$'
-    match = re.match(pattern, line)
-    
-    if not match:
-        return None
-    
-    try:
-        status_code = match.group(1)
-        file_size = int(match.group(2))
-        return status_code, file_size
-    except (IndexError, ValueError):
-        return None
-
-def main():
+if name == "main":
     total_size = 0
-    status_codes = defaultdict(int)
-    line_count = 0
-    
-    def signal_handler(sig, frame):
-        """Handle CTRL+C by printing statistics and exiting."""
-        print_statistics(total_size, status_codes)
-        sys.exit(0)
-    
-    # Set up signal handler for CTRL+C
-    signal.signal(signal.SIGINT, signal_handler)
-    
+    status_codes = {}
+    list_status_codes = [
+            "200", "301", "400", "401", "403", "404", "405", "500"]
+    for status in list_status_codes:
+        status_codes[status] = 0
+    count = 0
     try:
-        for line in sys.stdin:
-            line = line.strip()
-            result = parse_line(line)
-            
-            if result:
-                status_code, file_size = result
-                total_size += file_size
-                status_codes[status_code] += 1
-                line_count += 1
-                
-                # Print statistics every 10 lines
-                if line_count % 10 == 0:
-                    print_statistics(total_size, status_codes)
-    
-    except KeyboardInterrupt:
-        # Handle CTRL+C
-        print_statistics(total_size, status_codes)
-        sys.exit(0)
+        for line in stdin:
+            try:
+                args = line.split(" ")
+                if len(args) != 9:
+                    pass
+                if args[-2] in list_status_codes:
+                    status_codes[args[-2]] += 1
+                if args[-1][-1] == '\n':
+                    args[-1][:-1]
+                total_size += int(args[-1])
+            except (IndexError, ValueError):
+                pass
+            count += 1
+            if count % 10 == 0:
+                print("File size: {}".format(total_size))
+                for status in sorted(status_codes.keys()):
+                    if status_codes[status] != 0:
+                        print("{}: {}".format(
+                            status, status_codes[status]))
+        print("File size: {}".format(total_size))
+        for status in sorted(status_codes.keys()):
+            if status_codes[status] != 0:
+                print("{}: {}".format(status, status_codes[status]))
+    except KeyboardInterrupt as err:
+        print("File size: {}".format(total_size))
+        for status in sorted(status_codes.keys()):
+            if status_codes[status] != 0:
+                print("{}: {}".format(status, status_codes[status]))
+        raise
 
-if __name__ == "__main__":
+if name == "main":
     main()
