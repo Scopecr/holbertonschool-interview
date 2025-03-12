@@ -55,7 +55,9 @@ def validUTF8(data):
     return True
 
 # Example usage (for testing purposes)
-if  __name__ == "__main__":
+
+
+if __name__ == "__main__":
     # Valid UTF-8 examples
 
     data1 = [65]  # 'A'
