@@ -1,4 +1,11 @@
 #!/usr/bin/python3
+"""
+Module to validate UTF-8 encoding.
+
+This module provides a function to determine if a given data set represents
+a valid UTF-8 encoding, following the UTF-8 encoding specification where
+characters can be 1 to 4 bytes long.
+"""
 
 def validUTF8(data):
     """
@@ -59,4 +66,4 @@ if __name__ == "__main__":
     print(validUTF8(data1))  # True
     print(validUTF8(data2))  # True
     print(validUTF8(data3))  # False
-    print(validUTF8(data4))  # Falseutf8validation
+    print(validUTF8(data4))  # False
