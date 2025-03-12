@@ -7,6 +7,7 @@ a valid UTF-8 encoding, following the UTF-8 encoding specification where
 characters can be 1 to 4 bytes long.
 """
 
+
 def validUTF8(data):
     """
     Determines if a given data set represents a valid UTF-8 encoding.
