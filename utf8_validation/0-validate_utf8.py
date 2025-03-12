@@ -7,7 +7,7 @@ a valid UTF-8 encoding, following the UTF-8 encoding specification where
 characters can be 1 to 4 bytes long.
 """
 
-def  validUTF8(data):
+def validUTF8(data):
     """
     Determines if a given data set represents a valid UTF-8 encoding.
 
@@ -42,7 +42,7 @@ def  validUTF8(data):
         # Check if we have enough bytes remaining
         if i + num_bytes > len(data):
             return False
-        
+
         # Check all continuation bytes
         for j in range(i + 1, i + num_bytes):
             if not check_continuation_byte(data[j]):
