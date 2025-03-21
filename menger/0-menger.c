@@ -14,11 +14,11 @@ static int is_empty(size_t row, size_t col)
     {
         if (row % 3 == 1 && col % 3 == 1)
             return (1);
-        
+
         row /= 3;
         col /= 3;
     }
-    
+
     return (0);
 }
 
@@ -31,14 +31,14 @@ static int is_empty(size_t row, size_t col)
 void menger(int level)
 {
     size_t size, row, col;
-    
+
     /* If level is lower than 0, do nothing */
     if (level < 0)
         return;
-    
+
     /* Calculate size of the Menger sponge: 3^level */
     size = pow(3, level);
-    
+
     /* Draw the Menger sponge */
     for (row = 0; row < size; row++)
     {
