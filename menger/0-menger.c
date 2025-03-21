@@ -40,16 +40,16 @@ void menger(int level)
     size = pow(3, level);
 
     /* Draw the Menger sponge */
-    for (row = 0; row < size; row++)
-    {
-        for (col = 0; col < size; col++)
-        {
-            /* Print # or space based on Menger sponge pattern */
-            if (is_empty(row, col))
-                putchar(' ');
-            else
-                putchar('#');
-        }
-        putchar('\n');
-    }
+	for (row = 0; row < size; row++)
+	{
+		for (col = 0; col < size; col++)
+		{
+			/* Print # or space based on Menger sponge pattern */
+			if (is_empty(row, col))
+				putchar(' ');
+			else
+				putchar('#');
+		}
+		putchar('\n');
+	}
 }
