@@ -9,17 +9,17 @@
  */
 static int is_empty(size_t row, size_t col)
 {
-    /* Check if the cell should be empty based on Menger sponge pattern */
-    while (row > 0 && col > 0)
-    {
-        if (row % 3 == 1 && col % 3 == 1)
-            return (1);
+	/* Check if the cell should be empty based on Menger sponge pattern */
+	while (row > 0 && col > 0)
+	{
+		if (row % 3 == 1 && col % 3 == 1)
+			return (1);
 
-        row /= 3;
-        col /= 3;
-    }
+		row /= 3;
+		col /= 3;
+	}
 
-    return (0);
+	return (0);
 }
 
 /**
@@ -30,16 +30,16 @@ static int is_empty(size_t row, size_t col)
  */
 void menger(int level)
 {
-    size_t size, row, col;
+	size_t size, row, col;
 
-    /* If level is lower than 0, do nothing */
-    if (level < 0)
-        return;
+	/* If level is lower than 0, do nothing */
+	if (level < 0)
+		return;
 
-    /* Calculate size of the Menger sponge: 3^level */
-    size = pow(3, level);
+	/* Calculate size of the Menger sponge: 3^level */
+	size = pow(3, level);
 
-    /* Draw the Menger sponge */
+	/* Draw the Menger sponge */
 	for (row = 0; row < size; row++)
 	{
 		for (col = 0; col < size; col++)
