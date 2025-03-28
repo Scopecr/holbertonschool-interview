@@ -10,7 +10,7 @@ def solve_n_queens(n):
         n (int): Size of the chessboard and number of queens to place
 
     Returns:
-      list: A list of solutions, where each solution is a list of [row, col] positions
+      list: A list of solutions each solution is a list of [row, col] positions
     """
     def is_safe(solution, row, col):
         """
@@ -78,7 +78,7 @@ def main():
 
     # Validate input
     try:
-       n = int(sys.argv[1])
+        n = int(sys.argv[1])
     except ValueError:
         print("N must be a number")
         sys.exit(1)
