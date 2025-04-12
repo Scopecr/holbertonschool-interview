@@ -1,4 +1,4 @@
-#include <search.h>
+#include "search.h"
 
 /**
  * linear_skip - searches for a value in a sorted skip list
@@ -34,20 +34,20 @@ skiplist_t *linear_skip(skiplist_t *list, int value)
             express = express->next;
     }
 
-    printf("Value found between indexes [%lu] and [%lu]\n", 
+    printf("Value found between indexes [%lu] and [%lu]\n",
            prev->index, express->index);
 
     /* Linear search in the identified range */
     while (prev && prev->index <= express->index)
     {
         printf("Value checked at index [%lu] = [%d]\n", prev->index, prev->n);
-        
+
         if (prev->n == value)
             return (prev);
-        
+
         if (prev->next == NULL || prev->index == express->index)
             break;
-            
+
         prev = prev->next;
     }
 
