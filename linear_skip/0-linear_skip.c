@@ -10,6 +10,7 @@ skiplist_t *linear_skip(skiplist_t *list, int value)
 {
 	skiplist_t *express, *prev;	/* Check if list is NULL */
 	if (list == NULL)
+
 		return (NULL);
 
 	express = list;
