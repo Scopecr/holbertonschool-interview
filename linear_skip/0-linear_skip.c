@@ -38,10 +38,10 @@ skiplist_t *linear_skip(skiplist_t *list, int value)
 		prev->index, express->index);
 
 	/* Linear search in identified range */
-while (prev && prev->index <= express->index) {
-    printf("Value checked at index [%lu] = [%d]\n", prev->index, prev->n);
-    if (prev->n == value) return (prev);
-    if (!prev->next || prev->index == express->index) break;
-    prev = prev->next;
-}
-return (NULL);
+	while (prev && prev->index <= express->index) {
+		printf("Value checked at index [%lu] = [%d]\n", prev->index, prev->n);
+		if (prev->n == value) return (prev);
+		if (!prev->next || prev->index == express->index) break;
+		prev = prev->next;
+	}
+	return (NULL);
