@@ -8,15 +8,12 @@
  */
 skiplist_t *linear_skip(skiplist_t *list, int value)
 {
-	skiplist_t *express, *prev;
-
-	/* Check if list is NULL */
+	skiplist_t *express, *prev;	/* Check if list is NULL */
 	if (list == NULL)
 		return (NULL);
 
 	express = list;
 	prev = list;
-
 	/* Traverse the express lane */
 	while (express->express && express->n < value)
 	{
@@ -25,7 +22,6 @@ skiplist_t *linear_skip(skiplist_t *list, int value)
 		printf("Value checked at index [%lu] = [%d]\n",
 			express->index, express->n);
 	}
-
 	/* Handle end of express lane case */
 	if (express->express == NULL && express->n < value)
 	{
@@ -36,7 +32,6 @@ skiplist_t *linear_skip(skiplist_t *list, int value)
 
 	printf("Value found between indexes [%lu] and [%lu]\n",
 		prev->index, express->index);
-
 	/* Linear search in identified range */
 	while (prev && prev->index <= express->index)
 	{
