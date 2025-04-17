@@ -3,7 +3,7 @@
 const request = require('request');
 
 // Base URL for the Star Wars API
-const baseUrl = 'https://swapi-api.hbtn.io/api';
+const baseUrl = 'https://swapi-api.hbtn.io/api/people/5/';
 
 // Function to get character name from a URL
 function getCharacterName(characterUrl) {
