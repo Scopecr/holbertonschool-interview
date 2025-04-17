@@ -1,100 +1,53 @@
-#!/usr/bin/node
+#!/usr/bin/env node
 
 const request = require('request');
 
-// Base URL for the Star Wars API
-const baseUrl = 'https://swapi-api.hbtn.io/api/people/5/';
+// Get the movie ID from command line arguments
+const movieId = process.argv[2];
 
-// Function to get character name from a URL
-function getCharacterName(characterUrl) {
-  // Add format=json parameter if not already present
-  const url = characterUrl.includes('?') ?
-    `${characterUrl}&format=json` :
-    `${characterUrl}?format=json`;
-
-  return new Promise((resolve, reject) => {
-    request(url, (error, response, body) => {
-      if (error) {
-        reject(`Error retrieving character: ${error}`);
-        return;
-      }
-
-      if (response.statusCode !== 200) {
-        reject(`Error: Received status code ${response.statusCode} for ${url}`);
-        return;
-      }
-
-      try {
-        const characterData = JSON.parse(body);
-        resolve(characterData.name);
-      } catch (parseError) {
-        reject(`Error parsing character data: ${parseError}`);
-      }
-    });
-  });
+if (!movieId) {
+  console.error('Please provide a movie ID');
+  process.exit(1);
 }
 
-// Function to get and print all characters from a movie
-function getMovieCharacters(movieId) {
-  const filmUrl = `${baseUrl}/films/${movieId}/?format=json`;
+// URL for the film
+const filmUrl = `https://swapi-api.hbtn.io/api/films/${movieId}/?format=json`;
 
-  request(filmUrl, (error, response, body) => {
-    if (error) {
-      console.error(`Error: ${error}`);
-      process.exit(1);
-    }
+// Get the film data
+request(filmUrl, (error, response, body) => {
+  if (error) {
+    console.error(error);
+    return;
+  }
 
-    if (response.statusCode !== 200) {
-      console.error(`Error: Could not retrieve movie with ID ${movieId}`);
-      console.error(`Status code: ${response.statusCode}`);
-      process.exit(1);
-    }
+  if (response.statusCode !== 200) {
+    console.error(`Error: Status code ${response.statusCode}`);
+    return;
+  }
 
-    try {
-      const filmData = JSON.parse(body);
-      const charactersUrls = filmData.characters;
+  const film = JSON.parse(body);
+  const characters = film.characters;
 
-      // Process characters sequentially to maintain order
-      const processCharacters = async () => {
-        for (const url of charactersUrls) {
-          try {
-            const name = await getCharacterName(url);
-            console.log(name);
-          } catch (err) {
-            console.error(`Error fetching character: ${err}`);
-          }
+  // Process characters in order
+  let characterIndex = 0;
+
+  // Function to process next character
+  const getNextCharacter = () => {
+    if (characterIndex < characters.length) {
+      const characterUrl = characters[characterIndex];
+      characterIndex++;
+
+      request(characterUrl, (charError, charResponse, charBody) => {
+        if (!charError && charResponse.statusCode === 200) {
+          const character = JSON.parse(charBody);
+          console.log(character.name);
         }
-      };
-
-      processCharacters();
-
-    } catch (parseError) {
-      console.error(`Error parsing film data: ${parseError}`);
-      process.exit(1);
+        // Process next character regardless of errors to maintain ordering
+        getNextCharacter();
+      });
     }
-  });
-}
+  };
 
-// Main function
-function main() {
-  // Get movie ID from command line arguments
-  const args = process.argv.slice(2);
-
-  if (args.length === 0) {
-    console.log("Usage: node script.js <movie_id>");
-    console.log("Example: node script.js 3");
-    process.exit(1);
-  }
-
-  const movieId = parseInt(args[0], 10);
-
-  if (isNaN(movieId)) {
-    console.error("Error: Movie ID must be a number");
-    process.exit(1);
-  }
-
-  getMovieCharacters(movieId);
-}
-
-// Run the script
-main();
+  // Start processing characters
+  getNextCharacter();
+});
