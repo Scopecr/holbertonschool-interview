@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 def rain(walls):
     """
     Given a list of walls, return the amount of rain that can be trapped between them.
