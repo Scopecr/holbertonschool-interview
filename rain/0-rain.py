@@ -1,26 +1,46 @@
 #!/usr/bin/python3
+"""
+0-rain module
+Contains the rain function that calculates how much rainwater is retained.
+"""
+
+
 def rain(walls):
     """
-    Given a list of walls, return the amount of rain that can be trapped between them.
-    :param walls: List of walls
-    :return: Amount of rain that can be trapped
+    Calculate how many square units of water will be retained after it rains.
+
+    Args:
+        walls (list): A list of non-negative integers representing wall heights
+
+    Returns:
+        int: Total amount of rainwater retained
+
+    Notes:
+        - Assume that the ends of the list are not walls, so they won't retain water
+        - If the list is empty, return 0
     """
     if not walls:
         return 0
 
-    left_max = [0] * len(walls)
-    right_max = [0] * len(walls)
+    n = len(walls)
+    total_water = 0
 
+    # Precompute left and right maximum heights
+    left_max = [0] * n
+    right_max = [0] * n
+
+    # Fill left_max array
     left_max[0] = walls[0]
-    for i in range(1, len(walls)):
-        left_max[i] = max(left_max[i - 1], walls[i])
+    for i in range(1, n):
+        left_max[i] = max(left_max[i-1], walls[i])
 
-    right_max[-1] = walls[-1]
-    for i in range(len(walls) - 2, -1, -1):
-        right_max[i] = max(right_max[i + 1], walls[i])
+    # Fill right_max array
+    right_max[n-1] = walls[n-1]
+    for i in range(n-2, -1, -1):
+        right_max[i] = max(right_max[i+1], walls[i])
 
-    total_rain = 0
-    for i in range(len(walls)):
-        total_rain += min(left_max[i], right_max[i]) - walls[i]
+    # Calculate water trapped at each position
+    for i in range(n):
+        total_water += max(0, min(left_max[i], right_max[i]) - walls[i])
 
-    return total_rain
+    return total_water
