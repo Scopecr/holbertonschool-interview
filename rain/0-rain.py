@@ -15,9 +15,6 @@ def rain(walls):
     Returns:
         int: Total amount of rainwater retained
 
-    Notes:
-        - Assume that the ends of the list are not walls, so they won't retain water
-        - If the list is empty, return 0
     """
     if not walls:
         return 0
