@@ -20,7 +20,7 @@ void print_array(int *array, int low, int high)
 }
 
 /**
- * recursive_binary - Recursive function to find the first occcurrence
+ * recursive_binary - Recursive function to find the first occurrence
  * @array: Sorted array
  * @low: Lower bound index
  * @high: Upper bound index
