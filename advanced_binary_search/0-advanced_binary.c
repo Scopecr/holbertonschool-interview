@@ -38,9 +38,8 @@ int recursive_binary(int *array, int low, int high, int value)
 
     if (array[mid] == value)
     {
-        if (mid == low || array[mid - 1] != value)
-            return mid;
-        return recursive_binary(array, low, mid, value);
+        int left = recursive_binary(array, low, mid - 1, value);
+        return (left != -1) ? left : mid;
     }
     else if (array[mid] > value)
     {
