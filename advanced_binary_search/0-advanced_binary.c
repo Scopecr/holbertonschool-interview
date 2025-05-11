@@ -16,7 +16,7 @@ void print_array(int *array, int low, int high)
         if (i < high)
             printf(", ");
     }
-    print("\n");
+    printf("\n");
 }
 
 /**
