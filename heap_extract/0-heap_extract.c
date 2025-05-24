@@ -4,7 +4,6 @@
 /**
  * heap_size - Calculates the size of a binary tree
  * @tree: Pointer to the root node
- *
  * Return: Size of the tree
  */
 size_t heap_size(const heap_t *tree)
@@ -19,7 +18,6 @@ size_t heap_size(const heap_t *tree)
  * get_last_node - Gets the last level-order node in the heap
  * @root: Pointer to the root node
  * @size: Size of the heap
- *
  * Return: Pointer to the last node
  */
 heap_t *get_last_node(heap_t *root, size_t size)
@@ -100,7 +98,6 @@ void heapify_down(heap_t *node)
 /**
  * heap_extract - Extracts the root node of a Max Binary Heap
  * @root: Double pointer to the root node of the heap
- *
  * Return: Value stored in the root node, or 0 if function fails
  */
 int heap_extract(heap_t **root)
