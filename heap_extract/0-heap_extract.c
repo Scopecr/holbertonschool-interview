@@ -32,7 +32,8 @@ heap_t *get_last_node(heap_t *root, size_t size)
 
 	if (size == 1)
 		return (root);
-		node = root;
+
+	node = root;
 
 	/* Find the position by following the binary representation */
 	/* We need to find the highest bit position */
