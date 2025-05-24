@@ -102,22 +102,22 @@ void heapify_down(heap_t *node)
  */
 void remove_last_node(heap_t *root, heap_t *last_node)
 {
-    heap_t *parent;
+	heap_t *parent;
 
-    /* Replace root value with last node value */
-    root->n = last_node->n;
+	/* Replace root value with last node value */
+	root->n = last_node->n;
 
-    /* Remove the last node */
-    parent = last_node->parent;
-    if (parent)
-    {
-        if (parent->left == last_node)
-            parent->left = NULL;
-        else
-            parent->right = NULL;
-    }
+	/* Remove the last node */
+	parent = last_node->parent;
+	if (parent)
+	{
+		if (parent->left == last_node)
+			parent->left = NULL;
+		else
+			parent->right = NULL;
+	}
 
-    free(last_node);
+	free(last_node);
 }
 
 /**
@@ -128,33 +128,33 @@ void remove_last_node(heap_t *root, heap_t *last_node)
  */
 int heap_extract(heap_t **root)
 {
-    heap_t *last_node;
-    int root_value;
-    size_t size;
-    
-    if (!root || !*root)
-        return (0);
-    
-    root_value = (*root)->n;
-    size = heap_size(*root);
+	heap_t *last_node;
+	int root_value;
+	size_t size;
+	
+	if (!root || !*root)
+		return (0);
+	
+	root_value = (*root)->n;
+	size = heap_size(*root);
 
-    /* If only one node, delete it and set root to NULL */
-    if (size == 1)
-    {
-        free(*root);
-        *root = NULL;
-        return (root_value);
-    }
+	/* If only one node, delete it and set root to NULL */
+	if (size == 1)
+	{
+		free(*root);
+		*root = NULL;
+		return (root_value);
+	}
 
-    /* Find and remove the last node */
-    last_node = get_last_node(*root, size);
-    if (!last_node)
-        return (0);
+	/* Find and remove the last node */
+	last_node = get_last_node(*root, size);
+	if (!last_node)
+		return (0);
 
-    remove_last_node(*root, last_node);
+	remove_last_node(*root, last_node);
 
-    /* Restore heap property */
-    heapify_down(*root);
+	/* Restore heap property */
+	heapify_down(*root);
 
-    return (root_value);
+	return (root_value);
 }
