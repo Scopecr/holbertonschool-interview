@@ -96,52 +96,65 @@ void heapify_down(heap_t *node)
 }
 
 /**
+ * remove_last_node - Removes the last node and replaces root value
+ * @root: Pointer to the root node
+ * @last_node: Pointer to the last node to remove
+ */
+void remove_last_node(heap_t *root, heap_t *last_node)
+{
+    heap_t *parent;
+
+    /* Replace root value with last node value */
+    root->n = last_node->n;
+
+    /* Remove the last node */
+    parent = last_node->parent;
+    if (parent)
+    {
+        if (parent->left == last_node)
+            parent->left = NULL;
+        else
+            parent->right = NULL;
+    }
+
+    free(last_node);
+}
+
+/**
  * heap_extract - Extracts the root node of a Max Binary Heap
  * @root: Double pointer to the root node of the heap
+ *
  * Return: Value stored in the root node, or 0 if function fails
  */
 int heap_extract(heap_t **root)
 {
-	heap_t *last_node, *parent;
-	int root_value;
-	size_t size;
+    heap_t *last_node;
+    int root_value;
+    size_t size;
+    
+    if (!root || !*root)
+        return (0);
+    
+    root_value = (*root)->n;
+    size = heap_size(*root);
 
-	if (!root || !*root)
-		return (0);
+    /* If only one node, delete it and set root to NULL */
+    if (size == 1)
+    {
+        free(*root);
+        *root = NULL;
+        return (root_value);
+    }
 
-	root_value = (*root)->n;
-	size = heap_size(*root);
+    /* Find and remove the last node */
+    last_node = get_last_node(*root, size);
+    if (!last_node)
+        return (0);
 
-	/* If only one node, delete it and set root to NULL */
-	if (size == 1)
-	{
-		free(*root);
-		*root = NULL;
-		return (root_value);
-	}
+    remove_last_node(*root, last_node);
 
-	/* Find the last node */
-	last_node = get_last_node(*root, size);
-	if (!last_node)
-		return (0);
+    /* Restore heap property */
+    heapify_down(*root);
 
-	/* Replace root value with last node value */
-	(*root)->n = last_node->n;
-
-	/* Remove the last node */
-	parent = last_node->parent;
-	if (parent)
-	{
-		if (parent->left == last_node)
-			parent->left = NULL;
-		else
-			parent->right = NULL;
-	}
-
-	free(last_node);
-
-	/* Restore heap property */
-	heapify_down(*root);
-
-	return (root_value);
+    return (root_value);
 }
