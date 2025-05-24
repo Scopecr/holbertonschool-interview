@@ -131,10 +131,10 @@ int heap_extract(heap_t **root)
 	heap_t *last_node;
 	int root_value;
 	size_t size;
-	
+
 	if (!root || !*root)
 		return (0);
-	
+
 	root_value = (*root)->n;
 	size = heap_size(*root);
 
