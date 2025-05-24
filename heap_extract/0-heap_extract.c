@@ -10,7 +10,7 @@ size_t heap_size(const heap_t *tree)
 {
 	if (!tree)
 		return (0);
-	
+
 	return (1 + heap_size(tree->left) + heap_size(tree->right));
 }
 
@@ -68,11 +68,11 @@ void heapify_down(heap_t *node)
 
 	if (!node)
 		return;
-	
+
 	while (1)
 	{
 		largest = node;
-	
+
 		/* Check left child */
 		if (node->left && node->left->n > largest->n)
 			largest = node->left;
