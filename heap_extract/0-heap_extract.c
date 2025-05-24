@@ -26,25 +26,26 @@ heap_t *get_last_node(heap_t *root, size_t size)
 {
 	heap_t *node;
 	int bit;
-	
+
 	if (!root || size == 0)
 		return (NULL);
-	
+
 	if (size == 1)
 		return (root);
-	
-	node = root;
-	
+
+		node = root;
+
 	/* Find the position by following the binary representation */
 	/* We need to find the highest bit position */
 	size_t temp = size;
 	int depth = 0;
+
 	while (temp > 1)
 	{
 		temp >>= 1;
 		depth++;
 	}
-	
+
 	/* Follow the path from the second highest bit */
 	for (int i = depth - 1; i >= 0; i--)
 	{
@@ -54,7 +55,7 @@ heap_t *get_last_node(heap_t *root, size_t size)
 		else
 			node = node->right;
 	}
-	
+
 	return (node);
 }
 
@@ -66,31 +67,31 @@ void heapify_down(heap_t *node)
 {
 	heap_t *largest;
 	int temp;
-	
+
 	if (!node)
 		return;
 	
 	while (1)
 	{
 		largest = node;
-		
+	
 		/* Check left child */
 		if (node->left && node->left->n > largest->n)
 			largest = node->left;
-		
-		/* Check right child */
+
+			/* Check right child */
 		if (node->right && node->right->n > largest->n)
 			largest = node->right;
-		
+
 		/* If node is already the largest, heap property is satisfied */
 		if (largest == node)
 			break;
-		
+
 		/* Swap values */
 		temp = node->n;
 		node->n = largest->n;
 		largest->n = temp;
-		
+
 		/* Move down to the swapped child */
 		node = largest;
 	}
@@ -107,13 +108,13 @@ int heap_extract(heap_t **root)
 	heap_t *last_node, *parent;
 	int root_value;
 	size_t size;
-	
+
 	if (!root || !*root)
 		return (0);
-	
+
 	root_value = (*root)->n;
 	size = heap_size(*root);
-	
+
 	/* If only one node, delete it and set root to NULL */
 	if (size == 1)
 	{
@@ -121,15 +122,15 @@ int heap_extract(heap_t **root)
 		*root = NULL;
 		return (root_value);
 	}
-	
+
 	/* Find the last node */
 	last_node = get_last_node(*root, size);
 	if (!last_node)
 		return (0);
-	
+
 	/* Replace root value with last node value */
 	(*root)->n = last_node->n;
-	
+
 	/* Remove the last node */
 	parent = last_node->parent;
 	if (parent)
@@ -139,11 +140,11 @@ int heap_extract(heap_t **root)
 		else
 			parent->right = NULL;
 	}
-	
+
 	free(last_node);
-	
+
 	/* Restore heap property */
 	heapify_down(*root);
-	
+
 	return (root_value);
 }
