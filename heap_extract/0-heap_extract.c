@@ -25,7 +25,6 @@ size_t heap_size(const heap_t *tree)
 heap_t *get_last_node(heap_t *root, size_t size)
 {
     heap_t *node;
-    size_t path;
     int bit;
     
     if (!root || size == 0)
@@ -34,8 +33,6 @@ heap_t *get_last_node(heap_t *root, size_t size)
     if (size == 1)
         return (root);
     
-    /* Calculate path to the last node */
-    path = size;
     node = root;
     
     /* Find the position by following the binary representation */
