@@ -102,7 +102,7 @@ char *multiply_strings(char *num1, char *num2)
 		if (carry > 0)
 			result[i + j + 1] = (result[i + j + 1] - '0' + carry) + '0';
 	}
-	
+
 	return (result);
 }
 
