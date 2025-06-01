@@ -35,10 +35,10 @@ void print_error(void)
 int is_digit_string(char *str)
 {
 	int i;
-	
+
 	if (!str || *str == '\0')
 		return (0);
-	
+
 	for (i = 0; str[i]; i++)
 	{
 		if (!isdigit(str[i]))
@@ -54,7 +54,7 @@ int is_digit_string(char *str)
 void print_number(char *num)
 {
 	int i;
-	
+
 	for (i = 0; num[i]; i++)
 		_putchar(num[i]);
 	_putchar('\n');
@@ -74,23 +74,23 @@ char *multiply_strings(char *num1, char *num2)
 	int result_len = len1 + len2;
 	char *result;
 	int i, j, carry, sum, n1, n2;
-	
+
 	/* Allocate memory for result */
 	result = calloc(result_len + 1, sizeof(char));
 	if (!result)
 		print_error();
-	
+
 	/* Initialize result with zeros */
 	for (i = 0; i < result_len; i++)
 		result[i] = '0';
 	result[result_len] = '\0';
-	
+
 	/* Multiply each digit */
 	for (i = len1 - 1; i >= 0; i--)
 	{
 		carry = 0;
 		n1 = num1[i] - '0';
-		
+
 		for (j = len2 - 1; j >= 0; j--)
 		{
 			n2 = num2[j] - '0';
@@ -98,7 +98,7 @@ char *multiply_strings(char *num1, char *num2)
 			carry = sum / 10;
 			result[i + j + 1] = (sum % 10) + '0';
 		}
-		
+
 		if (carry > 0)
 			result[i + j + 1] = (result[i + j + 1] - '0' + carry) + '0';
 	}
@@ -129,26 +129,26 @@ char *remove_leading_zeros(char *num)
 int main(int argc, char *argv[])
 {
 	char *result, *clean_result;
-	
+
 	/* Check argument count */
 	if (argc != 3)
 		print_error();
-	
+
 	/* Check if arguments are valid digit strings */
 	if (!is_digit_string(argv[1]) || !is_digit_string(argv[2]))
 		print_error();
-	
+
 	/* Multiply the numbers */
 	result = multiply_strings(argv[1], argv[2]);
-	
+
 	/* Remove leading zeros */
 	clean_result = remove_leading_zeros(result);
-	
+
 	/* Print result */
 	print_number(clean_result);
-	
+
 	/* Free allocated memory */
 	free(result);
-	
+
 	return (0);
 }
