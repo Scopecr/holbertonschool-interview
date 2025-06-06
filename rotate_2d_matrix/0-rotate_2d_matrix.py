@@ -16,10 +16,10 @@ def rotate_2d_matrix(matrix):
     """
     n = len(matrix)
 
-
     # Process each concentric layer
     for layer in range(n // 2):
-        # For each element in the current layer (excluding the last one to avoid double processing)
+        # For each element in the current layer
+        # (excluding the last one to avoid double processing)
         for i in range(layer, n - layer - 1):
             # Store the top element temporarily
             temp = matrix[layer][i]
@@ -27,7 +27,7 @@ def rotate_2d_matrix(matrix):
             # Move left to top
             matrix[layer][i] = matrix[n - 1 - i][layer]
 
-            # Move bottom to left  
+            # Move bottom to left
             matrix[n - 1 - i][layer] = matrix[n - 1 - layer][n - 1 - i]
 
             # Move right to bottom
