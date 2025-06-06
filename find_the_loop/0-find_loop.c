@@ -9,35 +9,35 @@
  */
 listint_t *find_listint_loop(listint_t *head)
 {
-		listint_t *slow, *fast;
+	listint_t *slow, *fast;
 
-		if (head == NULL)
-				return (NULL);
+	if (head == NULL)
+		return (NULL);
 
-		slow = head;
-		fast = head;
+	slow = head;
+	fast = head;
 
-		/* Phase 1: Detect if cycle exists using Floyd's algorithm */
-		while (fast != NULL && fast->next != NULL)
+	/* Phase 1: Detect if cycle exists using Floyd's algorithm */
+	while (fast != NULL && fast->next != NULL)
+	{
+		slow = slow->next;          /* Move slow pointer by 1 step */
+		fast = fast->next->next;    /* Move fast pointer by 2 steps */
+
+		if (slow == fast)           /* Cycle detected */
 		{
-				slow = slow->next;          /* Move slow pointer by 1 step */
-				fast = fast->next->next;    /* Move fast pointer by 2 steps */
+			/* Phase 2: Find the start of the cycle */
+			slow = head;            /* Reset slow to head */
 
-				if (slow == fast)           /* Cycle detected */
-				{
-						/* Phase 2: Find the start of the cycle */
-						slow = head;            /* Reset slow to head */
+			/* Move both pointers at same speed until they meet */
+			while (slow != fast)
+			{
+				slow = slow->next;
+				fast = fast->next;
+			}
 
-						/* Move both pointers at same speed until they meet */
-						while (slow != fast)
-						{
-								slow = slow->next;
-								fast = fast->next;
-						}
-
-						return (slow);          /* Return the meeting point (start of loop) */
-				}
+			return (slow);          /* Return the meeting point (start of loop) */
 		}
+	}
 
-		return (NULL);                  /* No cycle found */
+	return (NULL);                  /* No cycle found */
 }
