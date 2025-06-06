@@ -27,14 +27,14 @@ listint_t *find_listint_loop(listint_t *head)
 				{
 						/* Phase 2: Find the start of the cycle */
 						slow = head;            /* Reset slow to head */
-						
+
 						/* Move both pointers at same speed until they meet */
 						while (slow != fast)
 						{
 								slow = slow->next;
 								fast = fast->next;
 						}
-						
+
 						return (slow);          /* Return the meeting point (start of loop) */
 				}
 		}
