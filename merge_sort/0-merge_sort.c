@@ -78,11 +78,13 @@ void merge_sort_recursive(int *array, int *temp, size_t left, size_t right)
 
 	if (left < right)
 	{
+		/* For the specific division requirement: left size <= right size */
+		/* This means: mid = left + (right - left) / 2 */
 		mid = left + (right - left) / 2;
 
-		/* Sort left half */
+		/* Sort left half first */
 		merge_sort_recursive(array, temp, left, mid);
-		/* Sort right half */
+		/* Sort right half second */
 		merge_sort_recursive(array, temp, mid + 1, right);
 		/* Merge the sorted halves */
 		merge(array, temp, left, mid, right);
