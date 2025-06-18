@@ -13,7 +13,7 @@ def makeChange(coins, total):
         total: Target amount to make change for
 
     Returns:
-        int: Fewest number of coins needed, or -1 if impossible, or 0 if total <= 0
+        int: Fewest number of coins needed, or -1 if impossible,0 if total <= 0
     """
     # Handle edge cases
     if total <= 0:
