@@ -1,4 +1,4 @@
-#!/bin/bash/python3
+#!/usr/bin/bash/python3
 '''
 Making Change - Dynamic Programming Solution
 '''
