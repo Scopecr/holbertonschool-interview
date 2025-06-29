@@ -2,6 +2,10 @@
 #include <string.h>
 #include "list.h"
 
+/* Function prototypes in case they're missing from list.h */
+List *add_node_end(List **list, char *str);
+List *add_node_begin(List **list, char *str);
+
 /**
  * add_node_end - Add a new node to the end of a double circular linked list
  * @list: Pointer to the list to modify
