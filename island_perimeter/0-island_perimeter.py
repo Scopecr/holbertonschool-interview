@@ -1,4 +1,11 @@
 #!/usr/bin/python3
+"""
+Calculates the perimeter of an island in a 2D grid.
+
+This module provides a single function, island_perimeter, which takes a
+rectangular grid of 0s (water) and 1s (land) and returns the total
+perimeter of the one island (no lakes).
+"""
 
 def island_perimeter(grid):
 		"""
@@ -14,16 +21,15 @@ def island_perimeter(grid):
 		for r in range(rows):
 				for c in range(cols):
 						if grid[r][c] == 1:
-								# start with 4 sides
 								perimeter += 4
-								# subtract for each adjacent land cell
-								if r > 0 and grid[r-1][c] == 1:       # up
+								# subtract shared edges
+								if r > 0 and grid[r-1][c] == 1:
 										perimeter -= 1
-								if r < rows - 1 and grid[r+1][c] == 1:  # down
+								if r < rows - 1 and grid[r+1][c] == 1:
 										perimeter -= 1
-								if c > 0 and grid[r][c-1] == 1:       # left
+								if c > 0 and grid[r][c-1] == 1:
 										perimeter -= 1
-								if c < cols - 1 and grid[r][c+1] == 1:  # right
+								if c < cols - 1 and grid[r][c+1] == 1:
 										perimeter -= 1
 
 		return perimeter
