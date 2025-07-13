@@ -7,6 +7,7 @@ rectangular grid of 0s (water) and 1s (land) and returns the total
 perimeter of the one island (no lakes).
 """
 
+
 def island_perimeter(grid):
 
     """
