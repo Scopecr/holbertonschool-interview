@@ -13,6 +13,7 @@ def island_perimeter(grid):
     :param grid: list[list[int]] where 1=land, 0=water
     :return: int perimeter of the single island
     """
+
     if not grid or not grid[0]:
         return 0
 
