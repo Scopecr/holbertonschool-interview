@@ -37,13 +37,13 @@ static int is_bst_util(const binary_tree_t *tree, long min, long max)
 				return (1);
 		}
 
-		if (tree->n < min || tree->n > max)
-		{
-				return (0);
-		}
+if (tree->n < min || tree->n > max)
+	{
+		return (0);
+	}
 
-		return (is_bst_util(tree->left,  min, (long)tree->n - 1) &&
-						is_bst_util(tree->right, (long)tree->n + 1, max));
+return (is_bst_util(tree->left,  min, (long)tree->n - 1) &&
+					is_bst_util(tree->right, (long)tree->n + 1, max));
 }
 
 /**
@@ -55,7 +55,7 @@ static int is_bst_util(const binary_tree_t *tree, long min, long max)
  */
 int binary_tree_is_avl(const binary_tree_t *tree)
 {
-		int lh, rh;
+	int lh, rh;
 
 if (!tree)
 	{
