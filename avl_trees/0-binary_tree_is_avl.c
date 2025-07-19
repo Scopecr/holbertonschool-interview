@@ -57,40 +57,40 @@ int binary_tree_is_avl(const binary_tree_t *tree)
 {
 		int lh, rh;
 
-		if (!tree)
-		{
-				return (0);
-		}
+if (!tree)
+	{
+		return (0);
+	}
 
-		/* Must satisfy BST property */
-		if (!is_bst_util(tree, LONG_MIN, LONG_MAX))
-		{
-				return (0);
-		}
+	/* Must satisfy BST property */
+	if (!is_bst_util(tree, LONG_MIN, LONG_MAX))
+	{
+						return (0);
+	}
 
-		/* Compute balance factor */
-		lh = (int)tree_height(tree->left);
-		rh = (int)tree_height(tree->right);
-		if ((lh - rh) > 1 || (rh - lh) > 1)
-		{
-				return (0);
-		}
+	/* Compute balance factor */
+	lh = (int)tree_height(tree->left);
+	rh = (int)tree_height(tree->right);
+if ((lh - rh) > 1 || (rh - lh) > 1)
+{
+	return (0);
+}
 
 /* Recursively ensure each subtree is also AVL */
 if (tree->left)
 {
-		if (!binary_tree_is_avl(tree->left))
-		{
-				return (0);
-		}
+	if (!binary_tree_is_avl(tree->left))
+	{
+	return (0);
+	}
 }
 
 if (tree->right)
 {
-		if (!binary_tree_is_avl(tree->right))
-			{
-				return (0);
-			}
+	if (!binary_tree_is_avl(tree->right))
+	{
+	return (0);
+	}
 }
 
 return (1);
