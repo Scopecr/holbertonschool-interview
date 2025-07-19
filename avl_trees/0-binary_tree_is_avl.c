@@ -11,15 +11,15 @@ static size_t tree_height(const binary_tree_t *tree)
 {
 		size_t lh, rh;
 
-		if (!tree)
-		{
-				return (0);
-		}
+	if (!tree)
+	{
+			return (0);
+}
 
-		lh = tree_height(tree->left);
-		rh = tree_height(tree->right);
+	lh = tree_height(tree->left);
+	rh = tree_height(tree->right);
 
-		return (lh > rh ? lh + 1 : rh + 1);
+	return (lh > rh ? lh + 1 : rh + 1);
 }
 
 /**
@@ -32,10 +32,10 @@ static size_t tree_height(const binary_tree_t *tree)
  */
 static int is_bst_util(const binary_tree_t *tree, long min, long max)
 {
-		if (!tree)
-		{
-				return (1);
-		}
+	if (!tree)
+	{
+			return (1);
+	}
 
 if (tree->n < min || tree->n > max)
 	{
