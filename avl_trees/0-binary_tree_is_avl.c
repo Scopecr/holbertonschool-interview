@@ -76,14 +76,14 @@ int binary_tree_is_avl(const binary_tree_t *tree)
 				return (0);
 		}
 
-		/* Recursively ensure each subtree is also AVL */
-		if (tree->left)
+/* Recursively ensure each subtree is also AVL */
+if (tree->left)
+{
+		if (!binary_tree_is_avl(tree->left))
 		{
-				if (!binary_tree_is_avl(tree->left))
-				{
-						return (0);
-				}
+				return (0);
 		}
+}
 
 if (tree->right)
 {
