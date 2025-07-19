@@ -11,6 +11,7 @@ static size_t tree_height(const binary_tree_t *tree)
 {
 		size_t lh, rh;
 
+
 		if (!tree)
 		{
 				return (0);
