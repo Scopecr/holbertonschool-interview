@@ -38,9 +38,9 @@ if (!tree)
 }
 
 if (tree->n < min || tree->n > max)
-	{
-		return (0);
-	}
+{
+	return (0);
+}
 
 return (is_bst_util(tree->left,  min, (long)tree->n - 1) &&
 					is_bst_util(tree->right, (long)tree->n + 1, max));
@@ -58,15 +58,15 @@ int binary_tree_is_avl(const binary_tree_t *tree)
 	int lh, rh;
 
 if (!tree)
-	{
-		return (0);
-	}
+{
+	return (0);
+}
 
 	/* Must satisfy BST property */
-	if (!is_bst_util(tree, LONG_MIN, LONG_MAX))
-	{
-						return (0);
-	}
+if (!is_bst_util(tree, LONG_MIN, LONG_MAX))
+{
+	return (0);
+}
 
 	/* Compute balance factor */
 	lh = (int)tree_height(tree->left);
