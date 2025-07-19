@@ -9,17 +9,17 @@
  */
 static size_t tree_height(const binary_tree_t *tree)
 {
-        size_t lh, rh;
+		size_t lh, rh;
 
-        if (!tree)
-        {
-                return (0);
-        }
+		if (!tree)
+		{
+				return (0);
+		}
 
-        lh = tree_height(tree->left);
-        rh = tree_height(tree->right);
+		lh = tree_height(tree->left);
+		rh = tree_height(tree->right);
 
-        return (lh > rh ? lh + 1 : rh + 1);
+		return (lh > rh ? lh + 1 : rh + 1);
 }
 
 /**
@@ -32,18 +32,18 @@ static size_t tree_height(const binary_tree_t *tree)
  */
 static int is_bst_util(const binary_tree_t *tree, long min, long max)
 {
-        if (!tree)
-        {
-                return (1);
-        }
+		if (!tree)
+		{
+				return (1);
+		}
 
-        if (tree->n < min || tree->n > max)
-        {
-                return (0);
-        }
+		if (tree->n < min || tree->n > max)
+		{
+				return (0);
+		}
 
-        return (is_bst_util(tree->left,  min, (long)tree->n - 1) &&
-                        is_bst_util(tree->right, (long)tree->n + 1, max));
+		return (is_bst_util(tree->left,  min, (long)tree->n - 1) &&
+						is_bst_util(tree->right, (long)tree->n + 1, max));
 }
 
 /**
@@ -55,43 +55,43 @@ static int is_bst_util(const binary_tree_t *tree, long min, long max)
  */
 int binary_tree_is_avl(const binary_tree_t *tree)
 {
-        int lh, rh;
+		int lh, rh;
 
-        if (!tree)
-        {
-                return (0);
-        }
+		if (!tree)
+		{
+				return (0);
+		}
 
-        /* Must satisfy BST property */
-        if (!is_bst_util(tree, LONG_MIN, LONG_MAX))
-        {
-                return (0);
-        }
+		/* Must satisfy BST property */
+		if (!is_bst_util(tree, LONG_MIN, LONG_MAX))
+		{
+				return (0);
+		}
 
-        /* Compute balance factor */
-        lh = (int)tree_height(tree->left);
-        rh = (int)tree_height(tree->right);
-        if ((lh - rh) > 1 || (rh - lh) > 1)
-        {
-                return (0);
-        }
+		/* Compute balance factor */
+		lh = (int)tree_height(tree->left);
+		rh = (int)tree_height(tree->right);
+		if ((lh - rh) > 1 || (rh - lh) > 1)
+		{
+				return (0);
+		}
 
-        /* Recursively ensure each subtree is also AVL */
-        if (tree->left)
-        {
-                if (!binary_tree_is_avl(tree->left))
-                {
-                        return (0);
-                }
-        }
+		/* Recursively ensure each subtree is also AVL */
+		if (tree->left)
+		{
+				if (!binary_tree_is_avl(tree->left))
+				{
+						return (0);
+				}
+		}
 
-        if (tree->right)
-        {
-                if (!binary_tree_is_avl(tree->right))
-                {
-                        return (0);
-                }
-        }
+		if (tree->right)
+		{
+				if (!binary_tree_is_avl(tree->right))
+				{
+						return (0);
+				}
+		}
 
-        return (1);
+		return (1);
 }
