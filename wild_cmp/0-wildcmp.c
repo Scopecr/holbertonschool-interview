@@ -1,4 +1,4 @@
-#include "main.h"
+#include "holberton.h"
 
 /**
  * wildcmp - Compares two strings and returns 1 if they can be considered
