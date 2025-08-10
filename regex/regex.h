@@ -1,4 +1,3 @@
-/* regex.h */
 #ifndef REGEX_H
 #define REGEX_H
 
@@ -14,7 +13,7 @@
 struct _regex_placeholder { int dummy; };
 
 /**
- * regex_match - Check if a pattern matches a string.
+ *
  * @str: String to scan (may be empty; must not contain '.' or '*').
  * @pattern: Regular expression (may be empty; supports '.' and '*').
  *
