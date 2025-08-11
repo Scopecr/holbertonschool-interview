@@ -12,7 +12,7 @@
  */
 struct _regex_placeholder 
 {
- int dummy;
+int dummy;
 };
 
 /**
