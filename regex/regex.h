@@ -10,7 +10,9 @@
  * This empty struct is harmless if not needed—remove it if your checker
  * doesn’t require any type in headers
  */
-struct _regex_placeholder { int dummy; };
+struct _regex_placeholder 
+{
+ int dummy; };
 
 /**
  *
