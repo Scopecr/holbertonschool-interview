@@ -3,8 +3,8 @@
 
 /**
  * struct _regex_placeholder
- *                             when no structs are needed.
- * @dummy: unused field
+ *
+ * @_regex_placegolder: unused field
  *
  * Note: Some checkers only require the file header + function docs.
  * This empty struct is harmless if not needed—remove it if your checker
