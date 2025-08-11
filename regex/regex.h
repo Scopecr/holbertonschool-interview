@@ -2,7 +2,7 @@
 #define REGEX_H
 
 /**
- * struct _regex_placeholder - (unused) placeholder to satisfy Betty header rule
+ * struct _regex_placeholder
  *                             when no structs are needed.
  * @dummy: unused field
  *
