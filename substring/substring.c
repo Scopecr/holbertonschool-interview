@@ -100,9 +100,11 @@ static int append_ans(int **ans, int *cap, int *count, int value)
 	if (*count == *cap)
 	{
 		newcap = (*cap == 0) ? 16 : (*cap * 2);
+
 		tmp = (int *)realloc(*ans, sizeof(int) * (size_t)newcap);
 		if (!tmp)
 			return (-1);
+
 		*ans = tmp;
 		*cap = newcap;
 	}
@@ -112,13 +114,14 @@ static int append_ans(int **ans, int *cap, int *count, int value)
 
 /**
  * scan_offset - sliding-window scan for a single alignment offset
- * @s:        string to scan
+ * @s:        string to scan (already shifted by base_off)
  * @s_len:    length of s
  * @wlen:     word length
- * @nbw:      number of words required in a window
+ * @nbw:      number of words in a valid window
  * @uniq:     unique word pointers
  * @U:        number of unique words
  * @need:     required counts for each unique word
+ * @base_off: offset relative to original base string
  * @ans:      result array pointer
  * @cap:      result capacity pointer
  * @count:    result count pointer
@@ -127,7 +130,7 @@ static int append_ans(int **ans, int *cap, int *count, int value)
  */
 static int scan_offset(const char *s, int s_len, int wlen, int nbw,
 		       const char **uniq, int U, const int *need,
-		       int **ans, int *cap, int *count)
+		       int base_off, int **ans, int *cap, int *count)
 {
 	int left, right, words_in, idl, idr;
 	int *seen;
@@ -166,7 +169,7 @@ static int scan_offset(const char *s, int s_len, int wlen, int nbw,
 
 		if (words_in == nbw)
 		{
-			if (append_ans(ans, cap, count, left) == -1)
+			if (append_ans(ans, cap, count, left + base_off) == -1)
 			{
 				free(seen);
 				return (-1);
@@ -235,7 +238,8 @@ int *find_substring(char const *s, char const **words,
 			break;
 
 		if (scan_offset(sp, sub_len, wlen, nb_words,
-				uniq, U, need, &ans, &cap, &count) == -1)
+				uniq, U, need, i,
+				&ans, &cap, &count) == -1)
 		{
 			free(uniq);
 			free(need);
