@@ -11,8 +11,7 @@
  *
  * Return: id in [0, U) if a match is found, else -1.
  */
-static int id_from_sub(const char *s, int wlen,
-                       const char **uniq, int U)
+static int id_from_sub(const char *s, int wlen, const char **uniq, int U)
 {
 	int i;
 
