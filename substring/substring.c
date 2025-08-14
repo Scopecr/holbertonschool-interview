@@ -3,63 +3,201 @@
 #include "substring.h"
 
 /**
- * find_in_unique - find index of a word in the unique list by strcmp
- * @w:    null-terminated word to find
- * @uniq: array of unique word pointers
- * @U:    number of unique words currently stored
- *
- * Return: index in uniq if found, else -1.
- */
-static int find_in_unique(const char *w, const char **uniq, int U)
-{
-	int i;
-
-	for (i = 0; i < U; i++)
-	{
-		if (strcmp(w, uniq[i]) == 0)
-			return (i);
-	}
-	return (-1);
-}
-
-/**
- * id_from_sub - find id of the unique word matching s[0..wlen-1]
- * @s:     pointer into the big string (not null-terminated at wlen)
+ * id_from_sub - get unique id for s[0..wlen-1] if it matches a word
+ * @s:     pointer inside big string (not null-terminated at wlen)
  * @wlen:  fixed word length
  * @uniq:  array of unique word pointers
  * @U:     number of unique words
  *
  * Return: id in [0, U) if a match is found, else -1.
  */
-static int id_from_sub(const char *s, int wlen, const char **uniq, int U)
+static int id_from_sub(const char *s, int wlen,
+                       const char **uniq, int U)
 {
 	int i;
 
 	for (i = 0; i < U; i++)
 	{
-		if (strncmp(s, uniq[i], (size_t)wlen) == 0 && uniq[i][wlen] == '\0')
+		if (strncmp(s, uniq[i], (size_t)wlen) == 0 &&
+		    uniq[i][wlen] == '\0')
 			return (i);
 	}
 	return (-1);
 }
 
 /**
- * find_substring - find all starting indices where a concat of all words appears
- * @s:         string to scan
- * @words:     array of words (all same length)
- * @nb_words:  number of words in the array
- * @n:         out-parameter: will receive result count
+ * build_unique - build uniq[] and need[] arrays from words
+ * @words:     input words
+ * @nb_words:  number of words
+ * @wlen:      word length (all equal)
+ * @uniq_out:  output: array of unique word pointers
+ * @need_out:  output: counts for each unique word
+ * @U_out:     output: number of unique words
  *
- * Return: malloc'd array of starting indices (size *n), or NULL if none.
- *         On error, returns NULL and sets *n = 0.
+ * Return: 0 on success, -1 on failure.
  */
-int *find_substring(char const *s, char const **words, int nb_words, int *n)
+static int build_unique(const char **words, int nb_words, int wlen,
+			const char ***uniq_out, int **need_out, int *U_out)
 {
-	int i, wlen, total_len, s_len;
-	int *ans = NULL, cap = 0, count = 0;
-	const char **uniq = NULL;  /* pointers to first occurrence of each unique word */
-	int *need = NULL;          /* required counts for each unique word */
-	int U = 0;                 /* number of unique words */
+	const char **uniq;
+	int *need;
+	int U, i, j, found;
+
+	uniq = (const char **)malloc(sizeof(*uniq) * (size_t)nb_words);
+	need = (int *)calloc((size_t)nb_words, sizeof(*need));
+	if (!uniq || !need)
+	{
+		free(uniq);
+		free(need);
+		return (-1);
+	}
+
+	U = 0;
+	for (i = 0; i < nb_words; i++)
+	{
+		found = -1;
+		for (j = 0; j < U; j++)
+		{
+			if (strncmp(words[i], uniq[j], (size_t)wlen) == 0 &&
+			    words[i][wlen] == '\0')
+			{
+				found = j;
+				break;
+			}
+		}
+		if (found == -1)
+		{
+			uniq[U] = words[i];
+			need[U] = 1;
+			U++;
+		}
+		else
+		{
+			need[found]++;
+		}
+	}
+
+	*uniq_out = uniq;
+	*need_out = need;
+	*U_out = U;
+	return (0);
+}
+
+/**
+ * append_ans - append a value to a dynamic int array
+ * @ans:    pointer to result pointer
+ * @cap:    pointer to current capacity
+ * @count:  pointer to current count
+ * @value:  value to append
+ *
+ * Return: 0 on success, -1 on allocation failure.
+ */
+static int append_ans(int **ans, int *cap, int *count, int value)
+{
+	int newcap;
+	int *tmp;
+
+	if (*count == *cap)
+	{
+		newcap = (*cap == 0) ? 16 : (*cap * 2);
+		tmp = (int *)realloc(*ans, sizeof(int) * (size_t)newcap);
+		if (!tmp)
+			return (-1);
+		*ans = tmp;
+		*cap = newcap;
+	}
+	(*ans)[(*count)++] = value;
+	return (0);
+}
+
+/**
+ * scan_offset - sliding-window scan for a single alignment offset
+ * @s:        string to scan
+ * @s_len:    length of s
+ * @wlen:     word length
+ * @nbw:      number of words required in a window
+ * @uniq:     unique word pointers
+ * @U:        number of unique words
+ * @need:     required counts for each unique word
+ * @ans:      result array pointer
+ * @cap:      result capacity pointer
+ * @count:    result count pointer
+ *
+ * Return: 0 on success, -1 on allocation failure.
+ */
+static int scan_offset(const char *s, int s_len, int wlen, int nbw,
+		       const char **uniq, int U, const int *need,
+		       int **ans, int *cap, int *count)
+{
+	int left, right, words_in, idl, idr;
+	int *seen;
+
+	seen = (int *)calloc((size_t)U, sizeof(*seen));
+	if (!seen)
+		return (-1);
+
+	left = 0;
+	right = 0;
+	words_in = 0;
+
+	while (right + wlen <= s_len)
+	{
+		idr = id_from_sub(s + right, wlen, uniq, U);
+		if (idr == -1)
+		{
+			memset(seen, 0, sizeof(*seen) * (size_t)U);
+			words_in = 0;
+			right += wlen;
+			left = right;
+			continue;
+		}
+
+		seen[idr]++;
+		words_in++;
+		right += wlen;
+
+		while (seen[idr] > need[idr])
+		{
+			idl = id_from_sub(s + left, wlen, uniq, U);
+			seen[idl]--;
+			words_in--;
+			left += wlen;
+		}
+
+		if (words_in == nbw)
+		{
+			if (append_ans(ans, cap, count, left) == -1)
+			{
+				free(seen);
+				return (-1);
+			}
+			idl = id_from_sub(s + left, wlen, uniq, U);
+			seen[idl]--;
+			words_in--;
+			left += wlen;
+		}
+	}
+	free(seen);
+	return (0);
+}
+
+/**
+ * find_substring - find all start indices of concatenations of given words
+ * @s:         string to scan
+ * @words:     array of words (same length)
+ * @nb_words:  number of words
+ * @n:         out: number of indices in returned array
+ *
+ * Return: malloc'd array of indices (size *n) or NULL if none/error.
+ */
+int *find_substring(char const *s, char const **words,
+		    int nb_words, int *n)
+{
+	const char **uniq = NULL;
+	int *need = NULL;
+	int *ans = NULL;
+	int cap = 0, count = 0;
+	int s_len, wlen, total_len, U = 0, i;
 
 	if (n)
 		*n = 0;
@@ -69,6 +207,7 @@ int *find_substring(char const *s, char const **words, int nb_words, int *n)
 	wlen = (int)strlen(words[0]);
 	if (wlen == 0)
 		return (NULL);
+
 	for (i = 1; i < nb_words; i++)
 	{
 		if ((int)strlen(words[i]) != wlen)
@@ -80,100 +219,33 @@ int *find_substring(char const *s, char const **words, int nb_words, int *n)
 	if (s_len < total_len)
 		return (NULL);
 
-	uniq = (const char **)malloc(sizeof(*uniq) * (size_t)nb_words);
-	need = (int *)calloc((size_t)nb_words, sizeof(*need));
-	if (!uniq || !need)
-		goto cleanup;
-
-	/* Build list of unique words and required counts (no copies, just pointers) */
-	for (i = 0; i < nb_words; i++)
+	if (build_unique(words, nb_words, wlen, &uniq, &need, &U) == -1)
 	{
-		int id = find_in_unique(words[i], uniq, U);
-
-		if (id == -1)
-		{
-			uniq[U] = words[i];
-			need[U] = 1;
-			U++;
-		}
-		else
-		{
-			need[id]++;
-		}
+		free(uniq);
+		free(need);
+		return (NULL);
 	}
 
-	/* Prepare answer buffer */
-	cap = 16;
-	ans = (int *)malloc(sizeof(*ans) * (size_t)cap);
-	if (!ans)
-		goto cleanup;
-
-	/* For each alignment offset in [0, wlen) */
 	for (i = 0; i < wlen; i++)
 	{
-		int left = i, right = i, words_in = 0;
-		int *seen = (int *)calloc((size_t)U, sizeof(*seen));
+		int sub_len = s_len - i;
+		const char *sp = s + i;
 
-		if (!seen)
-			goto cleanup;
+		if (sub_len < total_len)
+			break;
 
-		while (right + wlen <= s_len)
+		if (scan_offset(sp, sub_len, wlen, nb_words,
+				uniq, U, need, &ans, &cap, &count) == -1)
 		{
-			int idr = id_from_sub(s + right, wlen, uniq, U);
-
-			if (idr == -1)
-			{
-				/* Reset window on unknown chunk */
-				memset(seen, 0, sizeof(*seen) * (size_t)U);
-				words_in = 0;
-				right += wlen;
-				left = right;
-				continue;
-			}
-
-			seen[idr]++;
-			words_in++;
-			right += wlen;
-
-			/* Shrink from left if this word is over-represented */
-			while (seen[idr] > need[idr])
-			{
-				int idl = id_from_sub(s + left, wlen, uniq, U);
-
-				seen[idl]--;
-				words_in--;
-				left += wlen;
-			}
-
-			/* If window has exactly nb_words words, record index and slide by one word */
-			if (words_in == nb_words)
-			{
-				if (count == cap)
-				{
-					int *tmp;
-					cap *= 2;
-					tmp = (int *)realloc(ans, sizeof(*ans) * (size_t)cap);
-					if (!tmp)
-					{
-						free(seen);
-						goto cleanup;
-					}
-					ans = tmp;
-				}
-				ans[count++] = left;
-
-				/* Move left forward one word to keep searching overlapping matches */
-				{
-					int idl = id_from_sub(s + left, wlen, uniq, U);
-
-					seen[idl]--;
-					words_in--;
-					left += wlen;
-				}
-			}
+			free(uniq);
+			free(need);
+			free(ans);
+			return (NULL);
 		}
-		free(seen);
 	}
+
+	free(uniq);
+	free(need);
 
 	if (count == 0)
 	{
@@ -181,9 +253,5 @@ int *find_substring(char const *s, char const **words, int nb_words, int *n)
 		ans = NULL;
 	}
 	*n = count;
-
-cleanup:
-	free(uniq);
-	free(need);
 	return (ans);
 }
