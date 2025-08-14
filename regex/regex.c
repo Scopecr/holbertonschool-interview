@@ -1,47 +1,40 @@
 #include "regex.h"
 
 /**
- * match_here - Recursive helper that matches from current positions.
- * @s: Current position in the input string.
- * @p: Current position in the pattern.
+ * regex_match - Check if a pattern matches a string
+ * @str: The string to scan
+ * @pattern: The regular expression pattern
  *
- * Return: 1 if the suffix of @s matches the suffix of @p, 0 otherwise.
+ * Return: 1 if pattern matches string, 0 otherwise
  */
-static int match_here(const char *s, const char *p)
+int regex_match(char const *str, char const *pattern)
 {
-	int first_match = 0;
+	/* Base cases */
+	if (*pattern == '\0')
+		return (*str == '\0');
 
-	/* If pattern is exhausted, we match only if string is also exhausted */
-	if (*p == '\0')
-		return (*s == '\0');
+	/* Check if next character is '*' */
+	if (*(pattern + 1) == '*')
+	{
+		/* Handle x* pattern */
+		/* First try matching zero occurrences of the preceding character */
+		if (regex_match(str, pattern + 2))
+			return (1);
 
-	/* Invalid if pattern chunk begins with '*' */
-	if (*p == '*')
+		/* Then try matching one or more occurrences */
+		if (*str != '\0' && (*pattern == '.' || *pattern == *str))
+		{
+			return (regex_match(str + 1, pattern));
+		}
+
 		return (0);
+	}
 
-	/* Does current character match? */
-	first_match = (*s != '\0') && (*p == '.' || *p == *s);
+	/* Handle single character match */
+	if (*str != '\0' && (*pattern == '.' || *pattern == *str))
+	{
+		return (regex_match(str + 1, pattern + 1));
+	}
 
-	/* Handle 'x*' (zero or more of the preceding character) */
-	if (p[1] == '*')
-		return (match_here(s, p + 2) ||
-			(first_match && match_here(s + 1, p)));
-
-	/* Otherwise, advance both if current chars match */
-	return (first_match && match_here(s + 1, p + 1));
-}
-
-/**
- * regex_match - Check if a pattern matches a string.
- * @str: String to scan.
- * @pattern: Pattern to match against.
- *
- * Return: 1 if match, 0 otherwise.
- */
-int regex_match(const char *str, const char *pattern)
-{
-	if (!str || !pattern)
-		return (0);
-
-	return (match_here(str, pattern) ? 1 : 0);
+	return (0);
 }
