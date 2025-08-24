@@ -1,4 +1,11 @@
 #!/usr/bin/python3
+"""Prime Game: determine the overall winner across x rounds.
+
+Given rounds with upper bounds n_i, players alternately pick primes from
+{1..n_i} and remove the prime and its multiples. With optimal play, the
+number of moves in a round equals the count of primes ≤ n_i. If that
+count is odd, Maria (first player) wins the round; if even, Ben wins.
+"""
 
 def isWinner(x, nums):
     """
