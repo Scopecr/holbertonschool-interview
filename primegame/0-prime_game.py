@@ -7,6 +7,7 @@ number of moves in a round equals the count of primes ≤ n_i. If that
 count is odd, Maria (first player) wins the round; if even, Ben wins.
 """
 
+
 def isWinner(x, nums):
     """
     Determine who wins the most rounds of the prime game.
